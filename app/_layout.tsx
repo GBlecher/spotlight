@@ -1,24 +1,29 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import InitialLayout from "@/components/InitialLayout";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import ClerkAndConvexProvider from "@/providers/ClerkAndConvexProvider";
+// import { SplashScreen } from "expo-router";
+// import { useFonts } from "expo-font";
+// import { useCallback, useEffect } from "react";
+// import * as NavigationBar from "expo-navigation-bar";
+// import { Platform } from "react-native";
 
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+// import { StatusBar } from "expo-status-bar";
+
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
+
+if (!publishableKey) {
+  throw new Error("Clerk publishable key is not defined set in .env");
+}
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <ClerkAndConvexProvider>
+      <SafeAreaProvider>
+        <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
+          <InitialLayout />
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </ClerkAndConvexProvider>
   );
 }
